@@ -58,8 +58,8 @@ SUBROUTINE read_field
 
        dateprefix = filledFileName(dateFormat, prevYear, prevMon, prevDay)
 
-       fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(dateprefix)//TRIM(tGridName)//TRIM(fileSuffix)
-       hs(1:imt,1:jmt,-1) = get2DfieldNC(fieldFile, hs_name,[imindom,jmindom,nctstep,1],[imt,jmt,1,1,1],'st')
+       fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(tGridName)//TRIM(dateprefix)//TRIM(fileSuffix)
+       hs(1:imt,1:jmt,-1) = get2DfieldNC(fieldFile, hs_name,[imindom,jmindom,nctstep,1],[imt,jmt,1,1],'st')
        hs(imt+1,:,-1)     = hs(1,:,-1)
 
      END IF
@@ -70,7 +70,7 @@ SUBROUTINE read_field
 
      dateprefix = filledFileName(dateFormat, currYear, currMon, currDay)
 
-     fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(dateprefix)//TRIM(tGridName)//TRIM(fileSuffix)
+     fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(tGridName)//TRIM(dateprefix)//TRIM(fileSuffix)
      hs(1:imt,1:jmt,0) = get2DfieldNC(fieldFile, hs_name,[imindom,jmindom,nctstep,1],[imt,jmt,1,1],'st')
      hs(imt+1,:,0)     = hs(1,:,0)
 
@@ -92,7 +92,7 @@ SUBROUTINE read_field
 
      dateprefix = filledFileName(dateFormat, nextYear, nextMon, nextDay)
 
-     fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(dateprefix)//TRIM(tGridName)//TRIM(fileSuffix)
+     fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(tGridName)//TRIM(dateprefix)//TRIM(fileSuffix)
      hs(1:imt,1:jmt,1) = get2DfieldNC(fieldFile, hs_name,[imindom,jmindom,nctstep,1],[imt,jmt,1,1],'st')
      hs(imt+1,:,1)     = hs(1,:,1)
 
@@ -128,7 +128,7 @@ SUBROUTINE read_field
 
    dateprefix = filledFileName(dateFormat, currYear, currMon, currDay)
 
-   fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(dateprefix)//TRIM(uGridName)//TRIM(fileSuffix)
+   fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(uGridName)//TRIM(dateprefix)//TRIM(fileSuffix)
    uvel(1:imt,1:jmt,km:1:-1) = get3DfieldNC(fieldFile, ueul_name,[imindom,jmindom,1,nctstep],[imt,jmt,km,1],'st')
 
    IF (usgs_name/='') THEN
@@ -136,7 +136,7 @@ SUBROUTINE read_field
      uvel(1:imt,1:jmt,1:km) = uvel(1:imt,1:jmt,1:km) + tmp3d(1:imt,1:jmt,1:km)
    END IF
 
-   fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(dateprefix)//TRIM(vGridName)//TRIM(fileSuffix)
+   fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(vGridName)//TRIM(dateprefix)//TRIM(fileSuffix)
    vvel(1:imt,1:jmt,km:1:-1) = get3DfieldNC(fieldFile, veul_name,[imindom,jmindom,1,nctstep],[imt,jmt,km,1],'st')
 
    IF (vsgs_name/='') THEN
@@ -155,7 +155,7 @@ SUBROUTINE read_field
         IF (tracers(itrac)%action == 'read') THEN
 
             ! Read the tracer from a netcdf file
-            fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(dateprefix)//TRIM(tGridName)//TRIM(fileSuffix)
+            fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(TGridName)//TRIM(dateprefix)//TRIM(fileSuffix)
             IF (tracers(itrac)%dimension == '3D') THEN
                 tmp3d(1:imt,1:jmt,km:1:-1) = get3DfieldNC(fieldFile, tracers(itrac)%varname,[imindom,jmindom,1,nctstep] &
                           ,[imt,jmt,km,1],'st')

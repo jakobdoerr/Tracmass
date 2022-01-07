@@ -9,6 +9,7 @@ MODULE mod_tracerf
   !!
   !!------------------------------------------------------------------------------
 
+  USE mod_precdef
   IMPLICIT NONE
 
   CONTAINS
@@ -27,14 +28,14 @@ MODULE mod_tracerf
 
       IMPLICIT NONE
 
-      REAL, INTENT(IN)                         :: T(:,:,:)      ! Potential T [degC]
-      REAL, INTENT(IN)                         :: S(:,:,:)      ! Practical S [PSU]
+      REAL(DP), INTENT(IN)                         :: T(:,:,:)      ! Potential T [degC]
+      REAL(DP), INTENT(IN)                         :: S(:,:,:)      ! Practical S [PSU]
 
-      REAL, ALLOCATABLE, DIMENSION (:,:,:)     :: T68
+      REAL(DP), ALLOCATABLE, DIMENSION (:,:,:)     :: T68
 
-      REAL, ALLOCATABLE, DIMENSION (:,:,:)     :: thermo_dens0
+      REAL(DP), ALLOCATABLE, DIMENSION (:,:,:)     :: thermo_dens0
 
-      REAL, ALLOCATABLE, DIMENSION (:,:,:)     :: dens_temp
+      REAL(DP), ALLOCATABLE, DIMENSION (:,:,:)     :: dens_temp
 
       INTEGER                                  :: nx, ny, nz
 

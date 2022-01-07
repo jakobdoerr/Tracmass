@@ -3,11 +3,13 @@
 #================================================================
 
 # Project and case definition
-PROJECT	          = Theoretical
-CASE              = Theoretical
-RUNFILE 	        = runtracmass
-ARCH              =
-NETCDFLIBS        = none
+PROJECT	          = NEMO
+CASE              = Arctic
+RUNFILE 	      = runtracmass
+ARCH              = nird
+
+NETCDFLIBS        = custom
+NCDF_ROOT         = ${HOME}/local/netcdf-fortran/4.5.3
 #================================================================
 
 # Possible architectures:
@@ -16,6 +18,7 @@ NETCDFLIBS        = none
 # Possible netCDF settings:
 # automatic    (set by nc-config)
 # automatic-44 (set by nf-config, for netCDF version >4.4)
+# custom       (custom netCDF library, need to specify NCDF_ROOT)
 # none         (no netCDF library)
 
 #================================================================
@@ -53,6 +56,10 @@ else ifeq ($(NETCDFLIBS),automatic-44)
 LIB_DIR = $(shell nf-config --flibs)
 INC_DIR = $(shell nf-config --cflags)
 
+else ifeq ($(NETCDFLIBS),custom)
+LIB_DIR = -L$(NCDF_ROOT)/lib -lnetcdf -lnetcdff
+INC_DIR = -I$(NCDF_ROOT)/include
+
 else
 NCDF_ROOT = /usr
 
@@ -66,14 +73,20 @@ ifeq ($(ARCH),tetralith)
 FC = ifort
 FF = -g -O3 -traceback -pg
 
+else ifeq ($(ARCH),nird)
+FC = gfortran
+FF = -g -O3 -fbacktrace -fbounds-check -Wall -Wno-maybe-uninitialized -Wno-unused-dummy-argument
+
 else
 FC = gfortran
 FF = -g -O3 -fbacktrace -fbounds-check -Wall -Wno-maybe-uninitialized -Wno-unused-dummy-argument
 
 endif
 
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NCDF_ROOT}/lib
+
 # Path to sources
-VPATH = src:projects/$(PROJECT)
+VPATH = src:projects/$(PROJECT):_build
 
 all: runfile
 
@@ -108,7 +121,7 @@ $(OBJDIR):
 
 runfile : $(objects)
 
-	$(FC) $(FF) $(ORM_FLAGS) -o $(RUNFILE) $(objects) $(INC_DIR) $(LIB_DIR)
+	$(FC) $(FF) $(ORM_FLAGS) -o $(RUNFILE) $(objects) $(INC_DIR) $(LIB_DIR) -Wl,-rpath=${NCDF_ROOT}/lib
 
 test :
 
