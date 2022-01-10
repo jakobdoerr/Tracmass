@@ -4,7 +4,7 @@
 
 # Project and case definition
 PROJECT	          = NEMO
-CASE              = Arctic
+CASE              = Atlantic
 RUNFILE 	      = runtracmass
 ARCH              = nird
 
