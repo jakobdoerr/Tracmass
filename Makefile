@@ -3,8 +3,10 @@
 #================================================================
 
 # Project and case definition
-PROJECT	          = NEMO
-CASE              = Atlantic
+
+PROJECT	          = GLORYS12
+CASE              = Nordic5
+
 RUNFILE 	      = runtracmass
 ARCH              = nird
 
@@ -57,8 +59,8 @@ LIB_DIR = $(shell nf-config --flibs)
 INC_DIR = $(shell nf-config --cflags)
 
 else ifeq ($(NETCDFLIBS),custom)
-LIB_DIR = -L$(NCDF_ROOT)/lib -lnetcdf -lnetcdff
-INC_DIR = -I$(NCDF_ROOT)/include
+LIB_DIR = -L${HOME}/local/netcdf-fortran/4.5.3/lib -L${HOME}/local/netcdf/4.8.1/lib -lnetcdf -lnetcdff
+INC_DIR = -I${HOME}/local/netcdf-fortran/4.5.3/include
 
 else
 NCDF_ROOT = /usr
@@ -121,7 +123,7 @@ $(OBJDIR):
 
 runfile : $(objects)
 
-	$(FC) $(FF) $(ORM_FLAGS) -o $(RUNFILE) $(objects) $(INC_DIR) $(LIB_DIR) -Wl,-rpath=${NCDF_ROOT}/lib
+	$(FC) $(FF) $(ORM_FLAGS) -o $(RUNFILE) $(objects) $(INC_DIR) $(LIB_DIR) -Wl,-rpath=${NCDF_ROOT}/lib,-rpath=${HOME}/local/netcdf/4.8.1/lib
 
 test :
 
