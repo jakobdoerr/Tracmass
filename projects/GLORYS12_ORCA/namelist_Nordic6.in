@@ -1,0 +1,230 @@
+&INIT_GRID_DESCRIPTION
+    ! Direction of the grid (1 - E->W, S->N, B->U)
+    griddir = 1,1,-1
+
+    ! Does the netcdf data start with a zero index?
+    zeroindx = .TRUE.
+
+    l_onestep = .TRUE.
+    
+    ! Describe filenames
+    physDataDir     = '/Data/gfi/share/Reanalyses/GLORYS12V1/native_grid/input/',
+                                                    ! directory of physical data (u,v,T,S,MLD,etc)
+    physPrefixForm  = 'glorys12v1-monthly-',
+    dateformat      = 'YYYYMM'
+    tGridName       = 'gridT_m_',                     ! name of Tgrid, e.g. grid_T
+    uGridName       = 'gridU_',                     ! name of Ugrid
+    vGridName       = 'gridV_',                     ! name of Vgrid
+    
+    fileSuffix      = '.nc',                        ! suffix of files, e.g. ".nc"
+    
+    ! Describe variable names
+    hs_name         = 'sossheig'                    ! Sea surface height
+    ueul_name       = 'vozocrtx',                   ! name of resolved zonal velocity
+    veul_name       = 'vomecrty',                   ! ---- " -------   meridional
+    usgs_name       = '',                           ! name of eddy induced zonal velocity
+    vsgs_name       = '',                           ! ---- " -------   meridional
+/
+
+&INIT_GRID_SIZE
+    ! Size of global grid
+    imt             = 4322,                         ! number of global i points
+    jmt             = 699,                         ! number of global j points
+    km              = 50,                           ! number of global k points
+
+    iperio          = 0                             ! zonal periodic
+    jperio          = 1                             ! meridional boundary conditions
+
+    topoDataDir     = '/Data/gfi/share/Reanalyses/GLORYS12V1/native_grid/input/',
+                                                    ! directory of grid data
+
+    hgridFile       = 'mesh_h.nc'
+                                                    ! file with dx, dy etc
+    dy_name         = 'e2t'                         ! name of dy at T point
+    dyu_name        = 'e2u'                         !         dy at U point
+    dx_name         = 'e1t'                         ! name of dx at T point
+    dxv_name        = 'e1v'                         !         dx at V point
+
+    zgridFile       = 'mesh_z.nc'
+                                                    ! file with dz etc.
+    dzt_name        = 'e3t'                         ! name of 3D dz at T point
+    dzu_name        = 'e3t'                         ! --- " ---  dz at U point
+    dzv_name        = 'e3t'                         ! --- " ---  dz at V point
+
+    bathyFile       = 'bathy.nc'
+                                                    ! file with bathymetry in model levels
+    kmt_name        = 'deptho_lev'                      ! name of bathymetry in model levels
+/
+
+&INIT_GRID_SUBDOMAIN
+    l_subdom        = .FALSE.                       ! Initialise subdomain
+    imindom         = 50                            ! Eastern and western wall for subdomain
+    imaxdom         = 100
+    jmindom         = 50                            ! Southern and northern wall for subdomain
+    jmaxdom         = 100
+/
+
+&INIT_GRID_TIME
+    ngcm_step       = 1,                            ! time between two time levels
+                                                        ! if ncgcm_unit = 5, then ngcm_step = 3 means 3 months
+    ngcm_unit       = 5,                            ! units of ngcm
+                                                    
+    iter            = 120,                          ! number of subcycles between time levels stopped
+/
+
+&INIT_START_DATE
+    startsec       = 0,                             ! start time
+    startmin       = 0,
+    starthour      = 12,
+    startday       = 1,                             ! start date
+    startmon       = 1,
+    startyear      = 1995,
+    noleap         = .FALSE.,                       ! don't use leap years?
+    mon30day       = .false.
+/
+
+&INIT_RUN_TIME
+    ! Loop run
+    loopYears      = .TRUE.,                        ! make a time loop to run
+                                                        ! e.g. 1000 years using only 100 years of data
+    loopStartYear  = 1995,                          ! year to start loop from
+    loopEndYear    = 1995,                          ! last year of loop
+
+    ! Verbose
+    log_level      = 1                              ! precise 1->3->5 verbose
+
+    ! Information of run time
+    intrun         = 120                             ! number of time steps for run
+/
+
+&INIT_WRITE_TRAJ
+    write_frec    = 3                               ! 1 = write at time intervals of gcm datasets (each ints)
+                                                    ! 2 = write at each time iteration
+                                                    ! 3 = write each spatial grid-crossing
+                                                    ! 4 = write all the time steps
+                                                    ! 5 = write only start and end positions
+    outDataDir    = '/home/jdo043/DATA/ArMOC/Tracmass/output/GLORYS12_native/Nordic6/',
+    outDataFile   = 'output',
+
+    timeformat    = 0                               ! Format of the time array
+                                                        ! 0 - tt / 1 - ts / 2 - YYYY, MM, DD, HH
+/
+
+&INIT_SEEDING
+    nff           = 1,          ! = 1 run forward trajectories
+                                    ! = -1 run backwards
+    isec          = 2,          ! = 1 start on zonal cell wall
+                                    ! = 2 start on meridional cell wall
+                                    ! = 3 start on vertical wall
+    idir          = 1,          ! = 1 start only when flux > 0
+                                    ! = -1      only when flux < 0
+                                    ! = 0       both flux >0 and flux < 0
+    nqua          = 1,          ! number of trajectories can be set by
+                                    ! = 1 constant number of particles in all seeding cells
+                                        ! set by partQuant (particles / gridcell)
+                                    ! = 2 Each particle reflects mass transport at seeding.
+                                    !     set by partQuant (m3/s or kg/s per particle)
+                                    ! = 3 Each particle reflects air/water mass/volume at seeding.
+                                    !     set by partQuant in m3 or kg per particle
+
+    partquant     = 1,              ! particles/gridcell or m3s-1/particle or m3/particle
+    loneparticle  = 1,              ! start only one trajectory for debugging
+    seedtype      = 1,          ! = 1 seed using ist,jst,kst (below)
+                                    ! = 2 seed using file with start positions
+
+    ! when seedtype = 1
+
+    ist1          = 3387,       ! seed in box in range i = [ist1,ist2]
+    ist2          = 3388,        
+    jst1          = 665,            ! j = [jst1,jst2]
+    jst2          = 665,
+
+    kst1          = 26,              ! k = [kst1,kst2]
+    kst2          = 27,
+    ! when seedtype = 2
+    seeddir       = '',         ! directory for seed files
+    seedfile      = '',         ! name of seed file
+
+
+    seedtime      =  1,         ! = 1 seed only for specific times
+                                     ! = 2 seed using file with start positions
+
+    ! when seedtime = 1
+    tst1          = 1,          ! seed only between tst1 and tst2
+    tst2          = 3,
+
+    ! when seedtime = 2
+    timefile      = '',         ! name of seed file
+/
+
+&INIT_TRACERS
+    l_tracers = .true.          ! Should we evaluate tracers along the trajectories?
+
+    ! Tracer name (description)
+    tracername = 'thetao','so','sigma0'
+    ! Tracer unit (description)
+    tracerunit = 'degC','PSU','kg/m3'
+
+    ! Name of the variable in the netcdf (if it's read)
+    tracervarname = 'votemper','vosaline',''
+
+    ! Action (read or compute)
+    traceraction = 'read','read','compute'
+
+    ! Minimum and maximum value of the binning
+    tracermin = -3, 32, 20
+    tracermax = 33, 38, 30
+
+    ! Dimension of the tracer
+    tracerdimension = 3D, 3D, 3D
+/
+
+&INIT_TRACERS_SEEDING
+    ! minimum and maximum value for seeding
+    ! same order as in tracername
+    !tracer0min = 2, 34.9,
+    !tracer0max = 4, 35.0,
+/
+
+&INIT_KILLZONES
+    timax = 75000 ! time limit for traj [days]
+    l_nosurface = .TRUE.
+
+    exitType = 1
+    ! If exitType = 1: killing zone defined by a box
+    ! IMPORTANT -> The maximum number of boxes than can be defined are 10
+    ! ienw,iene are western and eastern i indices of killzone
+    ! jens,jenn are southern and northern j indices of killzone
+    ! ienw =   0,  500,
+    ! iene = 100, 1000,
+    ! jens = 200,  450,
+    ! jenn = 300,  470,
+    ! sets up two killzones, the first i = [0,100], j = [200,300]
+    ! the other i = [500,1000], j = [450,470]
+    ienw           =  200, 200,       ! west indices of killzones
+    iene           =  210, 210,       ! east indices of killzones
+    jens           =  50, 15,         ! south indices of killzones
+    jenn           =  55, 20,         ! north indices of killzones
+
+    ! If exitType = 2: killing zone defined by tracer value
+    ! Tracerchoice defines which tracer is used for the killing zone
+    ! it could be different
+    !tracerchoice = 1, 2
+    !tracere      = 25, 35
+    !maxormin     =  1, -1
+    ! This set up defines a killing zone by the 25C isotherm (maximum)
+    ! and the 35psu isohaline (minimum)
+
+/
+
+&INIT_POSTPROCESS
+    l_psi       = .FALSE.              ! Compute stream Functions
+    dirpsi      = -1,-1,-1,-1,-1       ! Direction of integration
+/
+
+&INIT_ACTIVE
+    l_diffusion = .FALSE.
+    ah          = 0.001
+    av          = 0.001
+
+/
