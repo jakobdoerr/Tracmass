@@ -39,7 +39,7 @@ MODULE mod_calendar
         INTEGER                            :: jcaltype
         REAL(DP)                           :: currStep
 
-        IF (log_level >= 5) THEN
+        IF (log_level >= 2) THEN
            PRINT*,'* Entering init_calendar '
         END IF
 
@@ -68,7 +68,7 @@ MODULE mod_calendar
            END IF
         END IF
 
-        IF (log_level >=3) THEN
+        IF (log_level >=2) THEN
            print*,'Before setting first time step. nextyear, mon,day, iyear, imon ',nextYear,nextMon,nextDay,iyear,imon
         END IF
 
@@ -82,7 +82,11 @@ MODULE mod_calendar
         ELSE IF (ngcm_unit == 4) THEN ! days
            currStep = ngcm_step * 86400.d0
         ELSE IF (ngcm_unit == 5) THEN ! months
-           currStep = ngcm_step * daysInMonth(imon, 3) * 86400.d0
+           jcaltype = 1
+           IF (.not. noleap .AND. ((MOD(nextYear, 4) .EQ. 0 .AND. MOD(nextYear, 100) .NE. 0) &
+               .OR. MOD(nextYear, 400) .EQ. 0)) jcaltype = 2
+           IF (mon30day) jcaltype = 3
+           currStep = ngcm_step * daysInMonth(imon, jcaltype) * 86400.d0
         ELSE IF (ngcm_unit == 6) THEN ! years
            jcaltype = 1
            IF (.not. noleap .AND. ((MOD(nextYear, 4) .EQ. 0 .AND. MOD(nextYear, 100) .NE. 0) &
@@ -104,9 +108,9 @@ MODULE mod_calendar
         ngcm = INT(currStep / (60*60)) ! hours
 
         ! ncgcm_seconds
-        tseas= DBLE(currStep)
+        tseas = DBLE(currStep)
 
-        IF (log_level >=5 ) THEN
+        IF (log_level >=2 ) THEN
            PRINT*,' Done initialising calendar. ngcm = ',ngcm
            PRINT*,' leaving init_calendar '
         END IF
@@ -192,10 +196,10 @@ MODULE mod_calendar
          REAL(DP)                            :: currStep
          INTEGER                             :: jcaltype
 
-         IF(log_level >= 5) THEN
+         IF(log_level >= 2) THEN
             PRINT*,' entering update_calendar '
          END IF
-
+         
          ! Update calendar
          currSec = nextSec; currMin = nextMin; currHour = nextHour
          currDay = nextDay; currMon = nextMon; currYear = nextYear
@@ -213,7 +217,7 @@ MODULE mod_calendar
             iyear = startYear - currYear + 1 + loopIndex*(loopStartYear - loopEndYear + 1)
          END IF
 
-         IF (log_level >= 3) THEN
+         IF (log_level >= 2) THEN
             print*,'b4 update calendar',nextYear,nextMon,nextDay,iyear,imon
          END IF
 
@@ -227,7 +231,11 @@ MODULE mod_calendar
          ELSE IF (ngcm_unit == 4) THEN ! days
             currStep = ngcm_step * 86400.d0
          ELSE IF (ngcm_unit == 5) THEN ! months
-            currStep = ngcm_step*daysInMonth(imon, 3) * 86400.d0
+            jcaltype = 1
+            IF (.not. noleap .AND. ((MOD(currYear, 4) .EQ. 0 .AND. MOD(currYear, 100) .NE. 0) &
+                .OR. MOD(currYear, 400) .EQ. 0)) jcaltype = 2
+            IF (mon30day) jcaltype = 3
+            currStep = ngcm_step*daysInMonth(imon, jcaltype) * 86400.d0
          ELSE IF (ngcm_unit == 6) THEN ! years
             jcaltype = 1
             IF (.not. noleap .AND. ((MOD(currYear, 4) .EQ. 0 .AND. MOD(currYear, 100) .NE. 0) &
@@ -246,10 +254,15 @@ MODULE mod_calendar
          ! ngcm
          ngcm = INT(currStep / (60*60)) ! hours
 
+         ! ncgcm_seconds
+         !tseas = DBLE(currStep)
+         
+         !PRINT *,'Updating calendar. tseas,tseed:',tseas,tseed
+         
          ! Now update the time and date
          nextSec  = currSec + currStep * nff
 
-         IF (log_level >= 3) THEN
+         IF (log_level >= 2) THEN
             PRINT*,' set up currStep, ngcm ',currStep,ngcm
          END IF
 
@@ -268,7 +281,7 @@ MODULE mod_calendar
                   jcaltype = 1
                   IF (.not. noleap .AND.((MOD(nextYear, 4) .EQ. 0 .AND. MOD(nextYear, 100) .NE. 0) &
                       .OR. MOD(nextYear, 400) .EQ. 0)) jcaltype = 2
-                  IF (mon30day .OR. ngcm_unit == 5) jcaltype = 3
+                  IF (mon30day) jcaltype = 3
 
                   IF (nextDay > daysInMonth(nextMon,jcaltype)) THEN
                      nextDay = nextDay - daysInMonth(nextMon,jcaltype)
@@ -316,7 +329,7 @@ MODULE mod_calendar
                      jcaltype = 1
                      IF (.not. noleap .AND.((MOD(nextYear, 4) .EQ. 0 .AND. MOD(nextYear, 100) .NE. 0) &
                          .OR. MOD(nextYear, 400) .EQ. 0)) jcaltype = 2
-                     IF (mon30day .OR. ngcm_unit == 5) jcaltype = 3
+                     IF (mon30day) jcaltype = 3
 
                      nextDay = nextDay + daysInMonth(nextMon, jcaltype)
                   END IF
@@ -385,7 +398,7 @@ MODULE mod_calendar
                   jcaltype = 1
                   IF (.not. noleap .AND.((MOD(dateYear, 4) .EQ. 0 .AND. MOD(dateYear, 100) .NE. 0) &
                       .OR. MOD(dateYear, 400) .EQ. 0)) jcaltype = 2
-                  IF (mon30day .OR. ngcm_unit == 5) jcaltype = 3
+                  IF (mon30day) jcaltype = 3
                   IF (dateDay > daysInMonth(dateMon, jcaltype)) THEN
                      dateDay = dateDay - daysInMonth(dateMon, jcaltype)
                      dateMon = dateMon + 1
@@ -432,7 +445,7 @@ MODULE mod_calendar
                      jcaltype = 1
                      IF (.not. noleap .AND.((MOD(dateYear, 4) .EQ. 0 .AND. MOD(dateYear, 100) .NE. 0) &
                          .OR. MOD(dateYear, 400) .EQ. 0)) jcaltype = 2
-                     IF (mon30day .OR. ngcm_unit == 5) jcaltype = 3
+                     IF (mon30day) jcaltype = 3
 
                      dateDay = dateDay + daysInMonth(dateMon,jcaltype)
                   END IF

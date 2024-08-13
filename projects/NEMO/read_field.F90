@@ -144,6 +144,20 @@ SUBROUTINE read_field
      vvel(1:imt,1:jmt,1:km) = vvel(1:imt,1:jmt,1:km) + tmp3d(1:imt,1:jmt,1:km)
    END IF
 
+#if defined w_explicit
+     
+     ! Manually allocate wvel
+     IF (.not. ALLOCATED(wvel)) THEN
+       ALLOCATE ( wvel(imt,jmt,km))
+       wvel(:,:,:) = 0.
+     ENDIF
+     
+     PRINT *,dateprefix
+     fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(wGridName)//TRIM(dateprefix)//TRIM(fileSuffix)
+     !fieldFile = TRIM(physDataDir)//TRIM(physPrefixForm)//TRIM(dateprefix)//TRIM(fileSuffix)
+     wvel(1:imt,1:jmt,km:1:-1) = get3DfieldNC(fieldFile, w_name,[imindom,jmindom,1,nctstep],[imt,jmt,km,1],'st')
+#endif
+
    !! Tracers
    IF (l_tracers) THEN
 
@@ -189,6 +203,10 @@ SUBROUTINE read_field
    ! uflux and vflux computation
    FORALL (kk = 1:km) uflux(:,:,kk,2)     = uvel(:,:,kk)*dyu(:,:)*dzu(:,:,kk,2)*zstou(:,:)
    FORALL (kk = 1:km) vflux(:,1:jmt,kk,2) = vvel(:,1:jmt,kk)*dxv(:,1:jmt)*dzv(:,1:jmt,kk,2)*zstov(:,:)
+
+#if defined w_explicit
+     FORALL (kk = 1:km) wflux(:,:,kk,2)     = wvel(:,:,kk)*dxdy(:,:)*zstot(:,:,0) ! TODO: do we need zstot here???
+#endif
 
    ! dzdt calculation
    IF (ints == 0 .AND. ( loopYears .EQV..FALSE.)) THEN

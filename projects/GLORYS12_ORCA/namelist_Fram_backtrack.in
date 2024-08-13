@@ -1,0 +1,136 @@
+&init_grid_description
+    griddir = 1, 1, -1
+    zeroindx = .true.
+    l_onestep = .true.
+    physdatadir = '/Data/gfi/share/Reanalyses/GLORYS12V1/native/Arctic/'
+    physprefixform = 'glorys12v1-monthly-'
+    dateformat = 'YYYYMM'
+    tgridname = 'gridT_m_'
+    ugridname = 'gridU_'
+    vgridname = 'gridV_'
+    wgridname = 'gridW_'
+    filesuffix = '.nc'
+    hs_name = 'sossheig'
+    ueul_name = 'vozocrtx'
+    veul_name = 'vomecrty'
+    w_name = 'vovecrtz'
+    usgs_name = ''
+    vsgs_name = ''
+/
+
+&init_grid_size
+    imt = 4322
+    jmt = 699
+    km = 50
+    iperio = 1
+    jperio = 1
+    topodatadir = '/Data/gfi/share/Reanalyses/GLORYS12V1/native/Arctic/'
+    hgridfile = 'mesh_hgr_Arctic.nc'
+    dy_name = 'e2t'
+    dyu_name = 'e2u'
+    dx_name = 'e1t'
+    dxv_name = 'e1v'
+    zgridfile = 'mesh_z_and_bathy_Arctic.nc'
+    dzt_name = 'e3t'
+    dzu_name = 'e3t'
+    dzv_name = 'e3t'
+    bathyfile = 'mesh_z_and_bathy_Arctic.nc'
+    kmt_name = 'mbathy'
+/
+
+&init_grid_subdomain
+    l_subdom = .false.
+    imindom = 50
+    imaxdom = 100
+    jmindom = 50
+    jmaxdom = 100
+/
+
+&init_grid_time
+    ngcm_step = 1
+    ngcm_unit = 5
+    iter = 300
+/
+
+&init_start_date
+    startsec = 0
+    startmin = 0
+    starthour = 12
+    startday = 31
+    startmon = 12
+    startyear = 1995
+    noleap = .false.
+    mon30day = .false.
+/
+
+&init_run_time
+    loopyears = .true.
+    loopstartyear = 2020
+    loopendyear = 1993
+    log_level = 0
+    intrun = 12
+/
+
+&init_write_traj
+    write_frec = 3
+    outdatadir = '/home/jdo043/DATA/ArMOC/Tracmass/output/GLORYS12_native/Fram_backtrack/'
+    outdatafile = 'output_19951231'
+    timeformat = 0
+/
+
+&init_seeding
+    nff = -1
+    isec = 2
+    idir = -1
+    nqua = 2
+    partquant = 1500
+    loneparticle = 0
+    seedtype = 1
+    ist1 = 3190
+    ist2 = 3325
+    jst1 = 445
+    jst2 = 445
+    kst1 = 1
+    kst2 = 50
+    seeddir = ''
+    seedfile = ''
+    seedtime = 1
+    tst1 = 1
+    tst2 = 1
+    timefile = ''
+/
+
+&init_tracers
+    l_tracers = .true.
+    tracername = 'thetao', 'so', 'sigma0'
+    tracerunit = 'degC', 'PSU', 'kg/m3'
+    tracervarname = 'votemper', 'vosaline', ''
+    traceraction = 'read', 'read', 'compute'
+    tracermin = -3, 32, 20
+    tracermax = 33, 38, 30
+    tracerdimension = '3D', '3D', '3D'
+/
+
+&init_tracers_seeding
+/
+
+&init_killzones
+    timax = 75000
+    l_nosurface = .true.
+    exittype = 1
+    ienw = 3190, 3037, 3385, 3425, 3425, 1353
+    iene = 3325, 3037, 3425, 3425, 3539, 1391
+    jens = 445, 537, 417, 340, 340, 141
+    jenn = 445, 537, 417, 417, 340, 141
+/
+
+&init_postprocess
+    l_psi = .false.
+    dirpsi = -1, -1, -1, -1, -1
+/
+
+&init_active
+    l_diffusion = .false.
+    ah = 0.001
+    av = 0.001
+/

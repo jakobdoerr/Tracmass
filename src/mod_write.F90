@@ -713,12 +713,12 @@ MODULE mod_write
 
             IF (write_form == 0 .AND. l_tracers) THEN
               outformat = "(I8,3(',',F8.2),1(',',F16.2),(',',I5),3(',',I3),1(',',I2),XX(',',F8.2))"
-              WRITE(outformat(49:50),"(I2)") numtracers
+              WRITE(outformat(59:60),"(I2)") numtracers
             ELSE IF (write_form == 0 ) THEN
               outformat = "(I8,3(',',F8.2),1(',',F16.2),(',',I5),3(',',I3),1(',',I2))"
             ELSE IF (write_form == 1 .AND. l_tracers) THEN
               outformat = "(I8,3(',',F13.5),1(',',F20.5),(',',I5),3(',',I3),1(',',I2),XX(',',F13.5))"
-              WRITE(outformat(50:51),"(I2)") numtracers
+              WRITE(outformat(60:61),"(I2)") numtracers
             ELSE IF (write_form == 1 ) THEN
               outformat = "(I8,3(',',F13.5),1(',',F20.5),(',',I5),3(',',I3),1(',',I2))"
             END IF
@@ -752,7 +752,7 @@ MODULE mod_write
 
         INTEGER :: ipart
 
-        CHARACTER(len=200) :: command
+        CHARACTER(len=300) :: command
 
         IF (ipart<10) THEN
           WRITE(partpath,'(A2,I1)') '00',ipart
@@ -764,7 +764,8 @@ MODULE mod_write
 
         command = 'gzip -cf '//TRIM(fullWritePref)//'_run.csv > '//&
                   & TRIM(fullWritePref)//'_run.csv.part_'//TRIM(partpath)//'.gz'
-
+                  
+        
         CALL system(command)
 
       END SUBROUTINE compress_part
@@ -777,7 +778,7 @@ MODULE mod_write
       !
       ! --------------------------------------------------
 
-        CHARACTER(len=200) :: command
+        CHARACTER(len=300) :: command
 
         LOGICAL          :: l_fileexist
 

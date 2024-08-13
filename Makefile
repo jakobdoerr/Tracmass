@@ -4,13 +4,13 @@
 
 # Project and case definition
 
-PROJECT	          = GLORYS12
-CASE              = Nordic5
+PROJECT	          = GLORYS12_ORCA
+CASE              = Atlantic_gates_Lom_hf
 
 RUNFILE 	      = runtracmass
-ARCH              = nird
+ARCH              = cyclone
 
-NETCDFLIBS        = custom
+NETCDFLIBS        = automatic-44
 NCDF_ROOT         = ${HOME}/local/netcdf-fortran/4.5.3
 #================================================================
 

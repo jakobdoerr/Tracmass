@@ -296,6 +296,7 @@ MODULE mod_time
 
   ! Time array
   REAL(DP)                                  :: tseas     ! GCM time step in seconds
+  REAL(DP)                                  :: tseed     ! Total GCM seconds at seeding
   REAL(DP)                                  :: t0        ! Seeding time step in seconds
   REAL(DP)                                  :: tt        ! Time vector since the beginnig of the simulation in seconds
   REAL(DP)                                  :: tf        ! Next time vector

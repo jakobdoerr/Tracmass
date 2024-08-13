@@ -5,7 +5,7 @@
 #------------------------------------------------------------------------
 #fl01  = -Dw_2dim       # Turn off vertical velocities.
 fl01  = -Dw_3dim       # Compute 3D vertical velocities.
-
+#fl01 = -Dw_explicit
 
 # Time integration scheme
 #------------------------------------------------------------------------

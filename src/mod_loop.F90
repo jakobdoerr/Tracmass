@@ -29,7 +29,8 @@ MODULE mod_loop
   USE mod_error
   USE mod_tracers
   USE mod_diffusion
-
+  USE mod_time,      only: tseed, tseas
+  
   USE mod_loopvars, only: niter, iloop, scrivi
 
   IMPLICIT NONE
@@ -66,11 +67,13 @@ MODULE mod_loop
 
     ! Read fields
     CALL read_field
-
+    
+    tseed = 0
     ! Start main time loop
     ! =======================================================================
     intsTimeLoop: DO ints=1, intrun-1
-
+        !PRINT *,'Loop, ints = ',ints
+        
         ! Update calendar
         CALL update_calendar()
 
@@ -80,6 +83,7 @@ MODULE mod_loop
         ! Seed trajectories
         CALL seed()
 
+        tseed = tseed + tseas
         IF (ints==1) CALL print_start_loop
 
         ! Loop over all trajectories and calculate a new position for this time step
@@ -177,7 +181,15 @@ MODULE mod_loop
             dxyz = dxdy(ib,jb)*(intrpg * dzt(ib,jb,kb,nsp)*zstot(ib,jb,0) + intrpr * dzt(ib,jb,kb,nsm)*zstot(ib,jb,-1))
 
             CALL errorCheck('dxyzError'     ,errCode)
-            IF (errCode .NE. 0) CYCLE ntracLoop
+            IF (errCode .NE. 0) THEN
+               !PRINT *,'ERRORR!!!!'
+               !PRINT *,dxdy(ib,jb)
+               !PRINT *,kb
+               !PRINT *,dzt(ib,jb,:,nsp)
+               !PRINT *,dzt(ib,jb,:,nsm)
+               CYCLE ntracLoop
+            END IF
+ 
 
             ! Calculate the 3 crossing times over the box  !
             ! choose the shortest time and calculate the   !
@@ -292,6 +304,7 @@ MODULE mod_loop
            EXIT intsTimeLoop
         END IF
 
+        tseas = ngcm * 60 * 60
     END DO intsTimeLoop
 
     CALL print_end_loop

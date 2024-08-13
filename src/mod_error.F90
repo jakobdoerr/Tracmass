@@ -65,7 +65,6 @@ MODULE mod_error
           errCode = 0
           ! If the volume at a given point is zero or negative
           IF (dxyz <= 0.d0) THEN
-
             nerror = nerror + 1
             errCode = 2
             trajectories(ntrac)%active = .FALSE.

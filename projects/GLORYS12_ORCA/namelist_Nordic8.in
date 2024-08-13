@@ -1,4 +1,4 @@
-! 3D, 1 parcel at Fram Strait, 1995 loop x 5, selfmade meshfiles
+! 3D, 1 parcel at Fram Strait, 1995, mesh files from mercator, daily
 &INIT_GRID_DESCRIPTION
     ! Direction of the grid (1 - E->W, S->N, B->U)
     griddir = 1,1,-1
@@ -9,13 +9,14 @@
     l_onestep = .TRUE.
     
     ! Describe filenames
-    physDataDir     = '/Data/gfi/share/Reanalyses/GLORYS12V1/native/',
+    physDataDir     = '/Data/gfi/share/Reanalyses/GLORYS12V1/native/daily_test/',
                                                     ! directory of physical data (u,v,T,S,MLD,etc)
-    physPrefixForm  = 'glorys12v1-monthly-',
-    dateformat      = 'YYYYMM'
-    tGridName       = 'gridT_m_',                     ! name of Tgrid, e.g. grid_T
+    physPrefixForm  = 'glorys12v1-daily_corr-',
+    dateformat      = 'YYYYMMDD'
+    tGridName       = 'gridT_',                     ! name of Tgrid, e.g. grid_T
     uGridName       = 'gridU_',                     ! name of Ugrid
     vGridName       = 'gridV_',                     ! name of Vgrid
+    wGridName       = '',
     
     fileSuffix      = '.nc',                        ! suffix of files, e.g. ".nc"
     
@@ -30,31 +31,31 @@
 &INIT_GRID_SIZE
     ! Size of global grid
     imt             = 4322,                         ! number of global i points
-    jmt             = 3059,                         ! number of global j points
+    jmt             = 359,                         ! number of global j points
     km              = 50,                           ! number of global k points
 
     iperio          = 1                             ! zonal periodic
     jperio          = 1                             ! meridional boundary conditions
 
-    topoDataDir     = '/Data/gfi/share/Reanalyses/GLORYS12V1/native/',
+    topoDataDir     = '/Data/gfi/share/Reanalyses/GLORYS12V1/native/daily_test/',
                                                     ! directory of grid data
 
-    hgridFile       = 'mesh_h.nc'
+    hgridFile       = 'mesh_hgr.nc'
                                                     ! file with dx, dy etc
     dy_name         = 'e2t'                         ! name of dy at T point
     dyu_name        = 'e2u'                         !         dy at U point
     dx_name         = 'e1t'                         ! name of dx at T point
     dxv_name        = 'e1v'                         !         dx at V point
 
-    zgridFile       = 'mesh_z.nc'
+    zgridFile       = 'mesh_z_and_bathy.nc'
                                                     ! file with dz etc.
     dzt_name        = 'e3t'                         ! name of 3D dz at T point
     dzu_name        = 'e3t'                         ! --- " ---  dz at U point
     dzv_name        = 'e3t'                         ! --- " ---  dz at V point
 
-    bathyFile       = 'bathy.nc'
+    bathyFile       = 'mesh_z_and_bathy.nc'
                                                     ! file with bathymetry in model levels
-    kmt_name        = 'deptho_lev'                      ! name of bathymetry in model levels
+    kmt_name        = 'mbathy'                      ! name of bathymetry in model levels
 /
 
 &INIT_GRID_SUBDOMAIN
@@ -68,9 +69,9 @@
 &INIT_GRID_TIME
     ngcm_step       = 1,                            ! time between two time levels
                                                         ! if ncgcm_unit = 5, then ngcm_step = 3 means 3 months
-    ngcm_unit       = 5,                            ! units of ngcm
+    ngcm_unit       = 4,                            ! units of ngcm
                                                     
-    iter            = 120,                          ! number of subcycles between time levels stopped
+    iter            = 10,                          ! number of subcycles between time levels stopped
 /
 
 &INIT_START_DATE
@@ -92,10 +93,10 @@
     loopEndYear    = 1995,                          ! last year of loop
 
     ! Verbose
-    log_level      = 1                              ! precise 1->3->5 verbose
+    log_level      = 1                             ! precise 1->3->5 verbose
 
     ! Information of run time
-    intrun         = 60                             ! number of time steps for run
+    intrun         = 1460                           ! number of time steps for run
 /
 
 &INIT_WRITE_TRAJ
@@ -104,7 +105,7 @@
                                                     ! 3 = write each spatial grid-crossing
                                                     ! 4 = write all the time steps
                                                     ! 5 = write only start and end positions
-    outDataDir    = '/home/jdo043/DATA/ArMOC/Tracmass/output/GLORYS12_native/Nordic6/',
+    outDataDir    = '/home/jdo043/DATA/ArMOC/Tracmass/output/GLORYS12_native/Nordic8/',
     outDataFile   = 'output',
 
     timeformat    = 0                               ! Format of the time array
@@ -129,19 +130,19 @@
                                     !     set by partQuant in m3 or kg per particle
 
     partquant     = 1,              ! particles/gridcell or m3s-1/particle or m3/particle
-    loneparticle  = 1,              ! start only one trajectory for debugging
+    loneparticle  = 0,              ! start only one trajectory for debugging
     seedtype      = 1,          ! = 1 seed using ist,jst,kst (below)
                                     ! = 2 seed using file with start positions
 
     ! when seedtype = 1
 
-    ist1          = 3361,       ! seed in box in range i = [ist1,ist2]
-    ist2          = 3362,        
-    jst1          = 2763,            ! j = [jst1,jst2]
-    jst2          = 2764,
+    ist1          = 3355,       ! seed in box in range i = [ist1,ist2]
+    ist2          = 3365,        
+    jst1          = 60,            ! j = [jst1,jst2]
+    jst2          = 70,
 
-    kst1          = 20,              ! k = [kst1,kst2]
-    kst2          = 21,
+    kst1          = 10,              ! k = [kst1,kst2]
+    kst2          = 40,
     ! when seedtype = 2
     seeddir       = '',         ! directory for seed files
     seedfile      = '',         ! name of seed file

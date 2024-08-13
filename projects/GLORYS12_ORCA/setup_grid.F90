@@ -37,6 +37,7 @@ SUBROUTINE setup_grid
     ! Allocate and define kmu and kmv, and kmt
     ALLOCATE ( kmu(imt,jmt), kmv(imt,jmt), tmp2d(imt,jmt) )
 
+    !PRINT *,imindom,jmindom,imt,jmt
     kmt(:,:) = INT(get2DfieldNC(TRIM(topoDataDir)//TRIM(bathyFile), kmt_name,[imindom,jmindom,1,1],[imt,jmt,1,1],'st'))
 
     WHERE (kmt>0)

@@ -31,9 +31,32 @@ MODULE mod_vertvel
             RETURN
 ! 2
 #else
+        !PRINT *,'-------kmt'
+        !PRINT *,kmt(ix,jy)
+        !PRINT *,'-------km'
+        !PRINT *,km
+        !PRINT *,'------ixm'
+        !PRINT *,ixm
+        !PRINT *,'------ix'
+        !PRINT *,ix
+        !PRINT *,'------jy'
+        !PRINT *,jy
         kloop: DO k = 1, kz
-
             IF (k> km - kmt(ix,jy)) THEN
+                !PRINT *,'-------uflux(ix,jy,k,:)'
+                !PRINT *,uflux(ix,jy,k,:)
+                !PRINT *,'-------uflux(ixm,jy,k,:)'
+                !PRINT *,uflux(ixm,jy,k,:)
+                !PRINT *,'-------vflux(ix,jy,k,:)'
+                !PRINT *,vflux(ix,jy,k,:)
+                !PRINT *,'-------vflux(ix,jy-1,k,:)'
+                !PRINT *,vflux(ix,jy-1,k,:)
+                !PRINT *,'-------dzdt'
+                !PRINT *,dzdt(ix,jy,k,:)
+                !PRINT *,'-------dxdy'
+                !PRINT *,dxdy(ix,jy)
+                !PRINT *,'-------wflux(k-1)'
+                !PRINT *,wflux(k-1,:)
                 wflux(k, 1) = wflux(k-1, 1) - &
                       ( uflux(ix,jy,k,1) - uflux(ixm,jy,k,1) + vflux(ix,jy,k,1) - vflux(ix,jy-1,k,1) ) &
                       - dzdt(ix,jy,k,1)*dxdy(ix,jy)
@@ -44,7 +67,8 @@ MODULE mod_vertvel
             ELSE
                 wflux(k,:) = 0.d0
             END IF
-
+            !PRINT *, '-----wflux'
+            !PRINT *, wflux(k,:)
        END DO kloop
 #endif
 

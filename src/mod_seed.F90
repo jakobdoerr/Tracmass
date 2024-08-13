@@ -18,7 +18,7 @@ MODULE mod_seed
 
     USE mod_log,  only            : log_level
     USE mod_grid, only            : imt, jmt, km, kmt, nsm, mask, dzt, griddir
-    USE mod_time, only            : ints, tseas, tt, ts, nff
+    USE mod_time, only            : ints, tseas, tseed, tt, ts, nff
     USE mod_vel,  only            : uflux, vflux, wflux
     USE mod_loopvars, only        : subvol
     USE mod_write, only           : write_data
@@ -272,9 +272,11 @@ MODULE mod_seed
             IF (nqua == 1) THEN
                 ntracmax = nsdMax*nsdTim*INT(partQuant)
             ELSE
-                ntracmax = nsdMax*nsdTim*10000
+                ntracmax = nsdMax*nsdTim*100 ! Was 10000
             END IF
 
+    
+            PRINT *,ntracmax
             ALLOCATE ( trajectories(ntracmax) )
             trajectories(:)%x1 = 0.
             trajectories(:)%y1 = 0.
@@ -315,7 +317,11 @@ MODULE mod_seed
               IF (log_level >= 5) THEN
                  PRINT*,' entering seed '
               END IF
-
+              
+              IF (log_level >= 2) THEN
+                  PRINT *, 'entering seed. tseas,tseed:',tseas,tseed
+              END IF
+              
               findTime: DO jsd=1,nsdTim
                  IF (seed_tim(jsd) == ints) THEN
                     itim = seed_tim(jsd)
@@ -392,6 +398,7 @@ MODULE mod_seed
                   ! Volume/mass transport needs to be positive
                   vol = ABS(vol)
 
+                  !PRINT *, vol
                   ! Number of trajectories for box (iist,ijst,ikst)
                   SELECT CASE (nqua)
                   CASE (1) ! partQuant particles per seed gridcell
@@ -538,9 +545,10 @@ MODULE mod_seed
                         END IF
 
                         ! tt - time, fractions of ints
-                        ! ts - time [s] rel to start
+                        ! ts - time [s] rel to start 
                         ts = DBLE (ints-1)
-                        tt = ts * tseas
+                        
+                        tt = tseed 
 
                         ! Define the trajectories
                         trajectories(ntrac)%x1 = x1
@@ -576,7 +584,7 @@ MODULE mod_seed
 
                         !Save initial particle position
                         IF(log_level >= 3) THEN
-                           PRINT*,' write initial trajectory position '
+                           PRINT*, ntrac,' write initial trajectory position '
                         END IF
 
                         CALL write_data('ini')
