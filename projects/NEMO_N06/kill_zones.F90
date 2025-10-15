@@ -80,7 +80,7 @@ SUBROUTINE kill_zones
 
   CASE(4)
       ! This will now kill everything one index BELOW the section.
-      DO nexit = 1, SIZE(killi)
+      killLoop: DO nexit = 1, SIZE(killi)
          !IF (x1 == killi(nexit) .AND. &
          !    y1 >= killj(nexit) - 1 .AND. y1 <= killj(nexit)) THEN
          !      nend = nexit + 1
@@ -92,9 +92,9 @@ SUBROUTINE kill_zones
          IF (x1 >= killi(nexit) - 1 .AND. x1 <= killi(nexit) .AND. &
              y1 >= killj(nexit) - 1 .AND. y1 <= killj(nexit)) THEN
                nend = nexit + 1
-               EXIT 
+               EXIT killLoop
          END IF
-      END DO
+      END DO killLoop
 
   END SELECT
 
